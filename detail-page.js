@@ -1,60 +1,34 @@
+const id = new URLSearchParams(location.search).get("id")
+
+const url = "https://striveschool-api.herokuapp.com/api/movies/"
+
 window.onload = () => {
-    displayContent()
-}
 
-const displayContent = async () => {
-    try {
-        const response = await fetch("https://striveschool-api.herokuapp.com/api/movies/", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMjFmMTRiYjUzZDAwMTViMTllZDciLCJpYXQiOjE2Mzg5NzI0MTQsImV4cCI6MTY0MDE4MjAxNH0.oauW9EyjgVFdXEkIv_2CZMaftq-xHesD6DsOGURaFg0"
-            }
-        })
-
-        if (response.ok) {
-            const categories = await response.json()
-            console.log(categories)
-            const films = await Promise.all(
-                categories.map(async (category) => {
-                    const res = await fetch("https://striveschool-api.herokuapp.com/api/movies/" + category, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMjFmMTRiYjUzZDAwMTViMTllZDciLCJpYXQiOjE2Mzg5NzI0MTQsImV4cCI6MTY0MDE4MjAxNH0.oauW9EyjgVFdXEkIv_2CZMaftq-xHesD6DsOGURaFg0"
-                        }
-                    })
-                    return await res.json()
-                })
-            )
-            films[0].forEach(film => {
-                const list = document.querySelector(".list-group")
-                document.querySelector(".spinner-border").classList.add("d-none")
-                const item = document.createElement("li")
-                item.classList.add("list-group-item", "d-flex", "align-items-center")
-                item.innerHTML = `<img src="${film.imageUrl}" height="60px" alt="product-photo">
-                <span class="ml-2">Name: ${film.name}<br>Category: ${film.category}<br>Description: ${film.description}</span>
-                <h5><a href="./detail-page.html?id=${film.id}"><span class="badge badge-lg badge-info ml-3">Details</span></a></h5>`
-                list.appendChild(item)
-                console.log(film)
-            })
+    fetch(url + id, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMjFmMTRiYjUzZDAwMTViMTllZDciLCJpYXQiOjE2Mzg5NzI0MTQsImV4cCI6MTY0MDE4MjAxNH0.oauW9EyjgVFdXEkIv_2CZMaftq-xHesD6DsOGURaFg0"
         }
-    } catch (err) {
-        console.error(err)
-    }
+    })
+        .then(response => response.json())
+        .then(film => {
+            console.log(film)
+            const title = document.querySelector(".title")
+            title.innerHTML = `${film.name} details:`
+            const list = document.querySelector(".list-group")
+            list.innerHTML = `<li class="list-group-item text-center"><img src="${film.imageUrl}" height="250px" alt="film-photo"></li>
+                    <li class="list-group-item">Name: ${film.name}</li>
+                    <li class="list-group-item">Category: ${film.category}</li>
+                    <li class="list-group-item">Description: ${film.description}</li>
+                    <li class="list-group-item">ID: ${film._id}</li>
+                    <li class="list-group-item">User ID: ${film.userId}</li>
+                    <li class="list-group-item">Created at: ${film.createdAt}</li>
+                    <li class="list-group-item">Updated at: ${film.updatedAt}</li>
+                    <span><button type="button" class="btn btn-warning mt-3 mb-5" onclick="editBtn()">Edit</button></span>`
+        })
+        .catch(err => console.error(err))
 }
 
-
-
-
-
-
-/* filmArray.forEach(film => {
-    const list = document.querySelector(".list-group")
-    document.querySelector(".spinner-border").classList.add("d-none")
-    console.log(film)
-    const item = document.createElement("li")
-    item.classList.add("list-group-item", "d-flex", "align-items-center")
-    item.innerHTML = `<img src="${film.imageUrl}" height="60px" alt="product-photo">
-    <span class="ml-2">Name: ${film.name}<br>Category: ${film.category}<br>Description: ${film.description}</span>`
-    list.appendChild(item)
-    <h5><a href="./detail-page.html?id=${film.id}"><span class="badge badge-lg badge-info ml-3">Details</span></a></h5>
-}) */
+const editBtn = () => {
+    window.location.assign("./back-office.html?id=" + id)
+}
