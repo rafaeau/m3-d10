@@ -26,10 +26,13 @@ const displayContent = async () => {
                 })
             )
             films[0].forEach(film => {
-                const list = document.getElementById("drama")
-                const item = document.createElement("div")
-                item.classList.add("img-wrap", "col-sm-6", "col-md-4", "col-lg-2", "mb-1", "pr-0")
-                item.innerHTML = `<a href="./detail-page.html?id=${film._id}"><img class="image-card img-fluid" height="200" src=${film.imageUrl} href="./detail-page.html?id=${film._id}"/></a>`
+                const list = document.querySelector(".list-group")
+                document.querySelector(".spinner-border").classList.add("d-none")
+                const item = document.createElement("li")
+                item.classList.add("list-group-item", "d-flex", "align-items-center")
+                item.innerHTML = `<img src="${film.imageUrl}" height="60px" alt="product-photo">
+                <span class="ml-2">Name: ${film.name}<br>Category: ${film.category}<br>Description: ${film.description}</span>
+                <h5><a href="./detail-page.html?id=${film.id}"><span class="badge badge-lg badge-info ml-3">Details</span></a></h5>`
                 list.appendChild(item)
                 console.log(film)
             })
