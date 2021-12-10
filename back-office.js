@@ -51,7 +51,7 @@ const addFilm = async (event) => {
         alert.className = "alert alert-success"
         alert.innerHTML = `Product with an id: "${serverResponse._id}" added successfully!`
         document.querySelector("form").reset()
-        /* setTimeout(() => { window.location.assign("./front-page.html") }, 2000) */
+        setTimeout(() => { window.location.assign("./front-page.html") }, 2000)
       }
     } catch (err) {
       alert(err),
@@ -59,4 +59,21 @@ const addFilm = async (event) => {
     }
   }
 
-  
+  const deleteFilm = () => {
+    fetch(url, {
+        method: "DELETE",
+        body: JSON.stringify(),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMjFmMTRiYjUzZDAwMTViMTllZDciLCJpYXQiOjE2Mzg5NzI0MTQsImV4cCI6MTY0MDE4MjAxNH0.oauW9EyjgVFdXEkIv_2CZMaftq-xHesD6DsOGURaFg0"
+        }
+      })
+    .then(response => response.json())
+    .then(response =>{console.log(response)
+      const alert = document.querySelector("#alert")
+      alert.className = "alert alert-danger"
+      alert.innerHTML = `Product with an id: "${response._id}" deleted successfully!`
+      setTimeout(() => { window.location.assign("./front-page.html") }, 2000)
+    })
+    .catch(err => console.log(err))
+  }
